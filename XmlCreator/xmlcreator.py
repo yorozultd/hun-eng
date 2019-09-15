@@ -20,5 +20,5 @@ with open("csv_arak_ebrand_tulajs.csv") as f:
                     field+=1
 mydata = ET.tostring(products)
 myfile = open("../Output/xmlData.xml", "w")
-myfile.write(str(mydata))
+myfile.write(mydata.decode('utf-8'))
 myfile.close()
