@@ -4,10 +4,10 @@ import numpy as np
 dictionary= np.load("../Dictionary/dictionary.npy",allow_pickle=True)
 products = ET.Element("products")
 with open("csv_arak_ebrand_tulajs.csv") as f:
-    product = ET.SubElement(products, 'product')
     field=1; 
     a=csv.reader(f)
     for i in a:
+        product = ET.SubElement(products, 'product')
         for j in i  :
             data= j.split("|")
             for k in data : 
