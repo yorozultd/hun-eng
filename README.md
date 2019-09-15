@@ -18,3 +18,14 @@
 # OUTPUT
 	
 	xmlData.xml contains the output
+	
+# Dictionary
+	
+	To read the dictionary goto /Dictionary
+	
+	> Open terminal there
+	>python3
+	>import numpy as np
+	>a=np.load("dictionary.npy",allow_pickle=True)
+	>a.item().get("WORD TO SEARCH IN THE DICTIONAY")
+
