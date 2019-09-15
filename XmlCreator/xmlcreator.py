@@ -52,28 +52,32 @@ with open("csv_arak_ebrand_tulajs.csv") as f:
                     else :
                         fields.text =dictionary.item().get(k.lower().strip())[0]
             if(len(i)==2):
-                j=i[1]
+                if(xmlDictionary.get(data[0].strip())==None):
+                    product = ET.SubElement(products, 'product')
+                    xmlDictionary[data[0].strip()]=product
+                    sku=True
+                    new=True
+                else :
+                    product=xmlDictionary.get(data[0].strip())
+                    sku=False
+                    new=False    
+                k=i[1]
                 fields = ET.SubElement(product, 'description')
-                if(k!=''):
-                    if not sku :
-                        fields = ET.SubElement(product, 'field_'+data[1])
+                k="".join(k.split("|")).strip()
+                if(dictionary.item().get(k.lower().strip())==None):
+                    if(len(k.strip().split(' '))>1 ):
+                        K=k.strip().split(" ")
+                        k=k.strip()
+                        for l in range(len(K)):
+                            if(dictionary.item().get(K[l].lower().strip())==None):
+                                pass
+                            else: 
+                                K[l]=dictionary.item().get(K[l].lower().strip())[0]
+                        fields.text= str(" ".join(K)).strip()
                     else :
-                        fields = ET.SubElement(product, 'sku')
-                        sku=False
-                    if(dictionary.item().get(k.lower().strip())==None):
-                        if(len(k.strip().split(' '))>1 ):
-                            K=k.strip().split(" ")
-                            k=k.strip()
-                            for l in range(len(K)):
-                                if(dictionary.item().get(K[l].lower().strip())==None):
-                                    pass
-                                else: 
-                                    K[l]=dictionary.item().get(K[l].lower().strip())[0]
-                            fields.text= str(" ".join(K)).strip()
-                        else :
-                            fields.text =  k;
-                    else :
-                        fields.text =dictionary.item().get(k.lower().strip())[0]
+                        fields.text =  k;
+                else :
+                    fields.text =dictionary.item().get(k.lower().strip())[0]
 mydata = ET.tostring(products)
 myfile = open("../Output/xmlData.xml", "w")
 myfile.write(mydata.decode('windows-1250'))
