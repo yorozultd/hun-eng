@@ -56,6 +56,7 @@ with open("download.csv") as f:                 #  offline
                 if(k!=''):
                     if not sku :
                         fields = ET.SubElement(product, 'field_'+data[1])
+                        tempF=fields
                     else :
                         fields = ET.SubElement(product, 'sku')
                         sku=False
@@ -69,13 +70,18 @@ with open("download.csv") as f:                 #  offline
                                 else: 
                                     K[l]=dictionary.item().get(K[l].lower().strip())[0]
                             fields.text= str(" ".join(K)).strip()
+                            temp= str(" ".join(K)).strip()
                         else :
                             fields.text =  k;
+                            temp =  k;
                     else :
                         fields.text =dictionary.item().get(k.lower().strip())[0]
+                        temp =dictionary.item().get(k.lower().strip())[0]
+                        
             if(len(i)==2):  
                 k=i[1]
-                fields = ET.SubElement(product, 'description')
+                #fields = ET.SubElement(product, 'field_'+data[1])
+                fields=tempF
                 k="".join(k.split("|")).strip()
                 if(dictionary.item().get(k.lower().strip())==None):
                     if(len(k.strip().split(' '))>1 ):
@@ -86,11 +92,11 @@ with open("download.csv") as f:                 #  offline
                                 pass
                             else: 
                                 K[l]=dictionary.item().get(K[l].lower().strip())[0]
-                        fields.text= str(" ".join(K)).strip()
+                        fields.text=temp+ str(" ".join(K)).strip()
                     else :
-                        fields.text =  k;
+                        fields.text =temp+  k;
                 else :
-                    fields.text =dictionary.item().get(k.lower().strip())[0]
+                    fields.text =temp +dictionary.item().get(k.lower().strip())[0]
 mydata = ET.tostring(products)
 myfile = open("../Output/xmlData.xml", "w")
 myfile.write(mydata.decode('windows-1250'))
