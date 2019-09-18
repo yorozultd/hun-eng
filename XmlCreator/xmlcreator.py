@@ -18,6 +18,7 @@ headers = {
 }
 products = ET.Element("products")
 xmlDictionary={}  
+pager={}  
 converter = {} 
 with open("fields.csv") as f:                 #  offline  
     a=csv.reader(f)                                           # offline
@@ -45,10 +46,12 @@ with open("download.csv") as f:                 #  offline
             if(xmlDictionary.get(data[0].strip())==None):
                 product = ET.SubElement(products, 'product')
                 xmlDictionary[data[0].strip()]=product
+                pager[data[0].strip()]=int(data[1])
                 sku=True
                 new=True
             else :
                 product=xmlDictionary.get(data[0].strip())
+                pager[data[0].strip()]=int(data[1])
                 sku=False
                 new=False
             for k in data : 
@@ -122,7 +125,7 @@ headers = {
 }
 
 
-xmlDictionary={}        
+#xmlDictionary={}        
   
 r = requests.get(url,headers=headers) 
   
@@ -149,7 +152,7 @@ with open("download1.csv") as f:                 #  offline
                         break
                     else :
                         heading = i[1].split("|")[0]
-                    if(xmlDictionary.get(heading.strip())==None):
+                    if(xmlDictionary.get(heading.split(" ")[-1].strip())==None):
                         product = ET.SubElement(products, 'product')
                         xmlDictionary[heading.strip()]=product
                         sku=True
@@ -158,14 +161,18 @@ with open("download1.csv") as f:                 #  offline
                         fields.text= heading.strip()
                         fielddata=0
                     else :
-                        product=xmlDictionary.get(heading.strip())
+                        product=xmlDictionary.get(heading.split(" ")[-1].strip())
                         sku=False
                         new=False
+                        fields = ET.SubElement(product, 'title')
+                        fields.text= heading.strip()
+                        fielddata=pager[heading.split(" ")[-1].strip()]
                     debug+=1
                 
                 data= j.split("|")
                 for datas in data:
                     fielddata+=1
+                    pager[heading.split(" ")[-1].strip()]=fielddata
                     if counter==2:
                         counter=3
                         continue
