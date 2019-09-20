@@ -133,7 +133,9 @@ with open("download1.csv",'wb') as f:
     f.write(r.content) 
 
 
+fieldIndex=0
 
+fieldsdata = ['type','brand','category','price','image','link','price_2','price_3','sku','size_1','size_2','size_3','category_2','data_1','data_2','data_3','description']
 with open("download1.csv") as f:                 #  offline  
     field=1; 
     debug =0
@@ -160,12 +162,14 @@ with open("download1.csv") as f:                 #  offline
                         fields = ET.SubElement(product, 'sku')
                         fields.text= heading.strip()
                         fielddata=0
+                        fieldIndex=0
                     else :
                         product=xmlDictionary.get(heading.split(" ")[-1].strip())
                         sku=False
                         new=False
                         fields = ET.SubElement(product, 'title')
                         fields.text= heading.strip()
+                        fieldIndex=0
                         fielddata=pager[heading.split(" ")[-1].strip()]
                     debug+=1
                 
@@ -178,7 +182,11 @@ with open("download1.csv") as f:                 #  offline
                         continue
                     if datas!='': 
                         if fielddata < 43:
-                            fields = ET.SubElement(product, converter[fielddata])
+                            if fieldIndex >= len(fieldsdata):
+                                fields = ET.SubElement(product, "field_"+str(fielddata))
+                            else : 
+                                fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
+                            fieldIndex+=1
                         else:
                             fields = ET.SubElement(product, "field_"+str(fielddata))
                         tempF=fields
