@@ -14,7 +14,7 @@ category_translator = {'Okosóra': 'Smartwatch'}
 
 allowed_categories = ["womanly okosóra","womanly wristwatch","womanly okosóra","Okosóra"]
 
-add_product_endpoint = "http://no1brand.ru/swisstime-add-product/"
+add_product_endpoint = "http://no1brand.ru/add-product/"
 
 input_xml = "Output/xmlDataAll.xml"
 tree = ET.parse(input_xml)
@@ -58,13 +58,13 @@ titleInEnglishFromFeed = title
 
 english_category = category
 
-stock_info = 1
+stock_info = 0
 
 style = "UNKNOWN"
 colour = "UNKNOWN"
 gender = "UNKNOWN"
-extended_description = "UNKNOWN"
-descriptionInEnglishFromFeed = "UNKNOWN"
+extended_description = description+"_1"
+descriptionInEnglishFromFeed = description+"_1"
 english_style = "UNKNOWN"
 
 print("Now at: "+str(title))
