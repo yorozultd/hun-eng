@@ -184,12 +184,15 @@ with open("download1.csv") as f:                 #  offline
                         if fielddata < 43:
                             if fieldIndex >= len(fieldsdata):
                                 #fields = ET.SubElement(product, "field_"+str(fielddata))
-                                fields = ET.SubElement(product, "description")
+                                #fields = ET.SubElement(product, "description")
+                                fields=descriptionfield
                             else : 
-                                fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
+                                fields = ET.SubElement(product,fieldsdata[fieldIndex] )
+                                descriptionfield=fields                                         #converter[fielddata])
                             fieldIndex+=1
                         else:
-                            fields = ET.SubElement(product, "description")
+                            #fields = ET.SubElement(product, "description")
+                            fields=descriptionfield
                         tempF=fields
                         fielddata+=1
                         if(dictionary.item().get(datas.lower().strip())==None):
