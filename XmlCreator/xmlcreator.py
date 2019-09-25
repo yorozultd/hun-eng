@@ -135,7 +135,8 @@ with open("download1.csv",'wb') as f:
 
 fieldIndex=0
 descriptionMapper={}
-fieldsdata = ['type','brand','category','price','image','link','price_2','price_3','sku','size_1','size_2','size_3','category_2','data_1','data_2','data_3','description']
+descriptionField={}
+fieldsdata = ['type','brand','category','price','image','link','price_2','price_3','sku','size_1','size_2','size_3','category_2','data_1','data_2','data_3']#,'description']
 with open("download1.csv") as f:                 #  offline  
     field=1; 
     debug =0
@@ -170,7 +171,8 @@ with open("download1.csv") as f:                 #  offline
                         fields = ET.SubElement(product, 'title')
                         fields.text= heading.strip()
                         fieldIndex=0
-                        fielddata=pager[heading.split(" ")[-1].strip()]
+                        #fielddata=pager[heading.split(" ")[-1].strip()]
+                        fielddata=0
                     debug+=1
                 
                 data= j.split("|")
@@ -178,6 +180,7 @@ with open("download1.csv") as f:                 #  offline
                 
                 for datas in data:
                     pager[heading.split(" ")[-1].strip()]=fielddata
+                    print(heading.split(" ")[-1].strip())
                     if counter==2:
                         counter=3
                         continue
@@ -185,22 +188,31 @@ with open("download1.csv") as f:                 #  offline
                         if fielddata < 43:
                             if fieldIndex >= len(fieldsdata):
                                 #fields = ET.SubElement(product, "field_"+str(fielddata))
-                                try : 
-                                    A=descriptionMapper[heading.split(" ")[-1].strip()]
-                                except : 
+                                if not descriptionField.get(heading.split(" ")[-1].strip()) == None:
+                                    fields= descriptionField.get(heading.split(" ")[-1].strip())
+                                    A = descriptionMapper.get(heading.split(" ")[-1].strip())
+                                    
+                                else : 
                                     A = ''
                                     descriptionMapper[heading.split(" ")[-1].strip()]=A
                                     fields = ET.SubElement(product, "description")
-                                    descriptionF= fields 
+                                    descriptionField[heading.split(" ")[-1].strip()]=fields
                                 diss =True
                             else : 
                                 fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
+                                diss=False
                             fieldIndex+=1
                         else:
-                            if not diss : 
+                            if not descriptionField.get(heading.split(" ")[-1].strip()) == None:
+                                fields= descriptionField.get(heading.split(" ")[-1].strip())
+                                A = descriptionMapper.get(heading.split(" ")[-1].strip())
+                                    
+                            else : 
+                                A = ''
+                                descriptionMapper[heading.split(" ")[-1].strip()]=A
                                 fields = ET.SubElement(product, "description")
-                                descriptionF=fields
-                                diss=True
+                                descriptionField[heading.split(" ")[-1].strip()]=fields
+                            diss =True
                         tempF=fields
                         fielddata+=1
                         if(dictionary.item().get(datas.lower().strip())==None):
@@ -220,7 +232,9 @@ with open("download1.csv") as f:                 #  offline
                         if not diss :
                             fields.text = tempss
                         else :
+                            A=descriptionMapper[heading.split(" ")[-1].strip()]
                             A=A + tempss;
+                            #print("ERROR  " +A)
                             fields.text=A
                             descriptionMapper[heading.split(" ")[-1].strip()]=A
 
@@ -230,7 +244,7 @@ with open("download1.csv") as f:                 #  offline
 
 
 
-
+print(descriptionMapper)
 
 mydata = ET.tostring(products)
 myfile = open("../Output/xmlDataAll.xml", "w")
