@@ -176,6 +176,7 @@ with open("download1.csv") as f:                 #  offline
                     debug+=1
                 
                 data= j.split("|")
+
                 diss =False
                 
                 for datas in data:
@@ -184,7 +185,7 @@ with open("download1.csv") as f:                 #  offline
                     if counter==2:
                         counter=3
                         continue
-                    if datas!='': 
+                    if datas!='' or True: 
                         if fielddata < 43:
                             if fieldIndex >= len(fieldsdata):
                                 #fields = ET.SubElement(product, "field_"+str(fielddata))
