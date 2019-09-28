@@ -8,6 +8,16 @@ import json
 import sys
 import csv
 
+#######################################################################################################
+class XmlParser:
+ def __init__(self):
+  self.root = None
+ def set_root(self,root):
+  self.root = root
+ def return_field(self,field_name):
+  return self.root.findall(field_name)[0].text if len(self.root.findall(field_name)) > 0 else "UNKNOWN"
+#######################################################################################################
+# Entry #
 print("Launching application...")
 
 category_translator = {'Okosóra': 'Smartwatch'}
@@ -34,26 +44,47 @@ allowed_products = [x for x in products_from_file if len(x.findall("category")) 
 
 print("Found ("+str(len(allowed_products))+") allowed products...")
 
+xp = XmlParser()
+counter = 1
 for product in allowed_products:
 
- sku   = product.findall("sku")[0].text if len(product.findall("sku")) > 0 else "UNKNOWN"
- brand = product.findall("brand")[0].text if len(product.findall("brand")) > 0 else "UNKNOWN"
+ if(counter == 2):
+  sys.exit(1)
+
+ xp.set_root(product)
+
+ sku   = xp.return_field("sku")
+ brand = xp.return_field("brand")
  title = brand + " - " + sku
  
- novat_price = product.findall("price")[0].text if len(product.findall("price")) > 0 else "UNKNOWN"
+ novat_price = xp.return_field("price")
  street_price = str(float(novat_price) * 1.5)
  suggested_price = novat_price
  
- image_1 = product.findall("image")[0].text if len(product.findall("image")) > 0 else "UNKNOWN"
+ image_1 = xp.return_field("image")
  image_2 = ""
  image_3 = ""
  
- category = product.findall("category")[0].text if len(product.findall("category")) > 0 else "UNKNOWN"
+ category = xp.return_field("category")
  category = category_translator[category] if category in category_translator.keys() else category
  
  supplier = "swisstime"
  
- description = product.findall("description")[0].text if len(product.findall("description")) > 0 else "UNKNOWN"
+# description = xp.return_field("description")
+
+ diameter       =  xp.return_field("atmero")
+ case_height    =  xp.return_field("tok_magassag")
+ case_thickness =  xp.return_field("tok_vastagsag")
+ waterproof     =  xp.return_field("vizallosag")
+ strap_width    =  xp.return_field("szij_szelesseg")
+ strap_width    =  xp.return_field("szij_szelesseg")
+ description = "While the history and precision timekeeping offered by "+brand+" watches is appealing, today, this is one of the most well-known brands around the globe. A showcase of quality and modern design, our "+brand+" collection delivers elegance and sophistication to suit any occasion. our company provides access to years of "+brand+" models, specializing in only like-new options, to ensure you receive the exquisite timepiece you expect. <br> "
+ description += "Diameter: "+diameter + "<br>"
+ description += "Case height: "+case_height + "<br>"
+ description += "Case thickness: "+case_thickness + "<br>"
+ description += "Waterproof: "+waterproof + "<br>"
+ description += "Strap width: "+strap_width + "<br><br>"
+ description += "Any questions? Do not hesitate to send us a message and we will answer your questions in a prompt manner!"
  
  titleInEnglishFromFeed = title
  
@@ -68,10 +99,10 @@ for product in allowed_products:
  descriptionInEnglishFromFeed = description+"_1"
  english_style = "UNKNOWN"
  
- print("Now at: "+str(title))
+ print("Now at: "+str(title)+" ("+str(counter)+"/"+str(len(allowed_products))+")")
  
  payload = {
-               'description':                      description,
+               'swiss_description':                description,
                'extended_description':             extended_description,
                'descriptionInEnglishFromFeed':     descriptionInEnglishFromFeed,
                'titleInEnglishFromFeed':           titleInEnglishFromFeed,
@@ -95,3 +126,4 @@ for product in allowed_products:
               }
  r = requests.post(add_product_endpoint, data=payload)
  print(r.text)
+ counter += 1
