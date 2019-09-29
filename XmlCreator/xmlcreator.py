@@ -160,10 +160,11 @@ with open("download1.csv") as f:                 #  offline
                         xmlDictionary[heading.strip()]=product
                         sku=True
                         new=True
-                        fields = ET.SubElement(product, 'sku')
                         fields.text= heading.strip()
                         fielddata=0
                         fieldIndex=0
+                        fields = ET.SubElement(product, 'sku')
+
                     else :
                         product=xmlDictionary.get(heading.split(" ")[-1].strip())
                         sku=False
@@ -200,7 +201,11 @@ with open("download1.csv") as f:                 #  offline
                                     descriptionField[heading.split(" ")[-1].strip()]=fields
                                 diss =True
                             else : 
-                                fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
+                                if fieldsdata[fieldIndex]=='sku':
+                                    fieldIndex+=1
+                                    continue
+                                else:
+                                    fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
                                 diss=False
                             fieldIndex+=1
                         else:
