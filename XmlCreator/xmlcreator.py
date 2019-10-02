@@ -145,7 +145,7 @@ with open("download1.csv") as f:                 #  offline
     for i in a:
         debug=0
         counter=0
-        if(len(i)>0 and i[0]!='|'):
+        if(len(i)>0 and i[0]!='|') or True:
             for j in i :
                 counter+=1
             #print(i)
@@ -179,14 +179,15 @@ with open("download1.csv") as f:                 #  offline
                 data= j.split("|")
 
                 diss =False
-                
-                for datas in data:
+                datas=-1
+                while datas < len(data)-1:
+                    datas+=1
                     pager[heading.split(" ")[-1].strip()]=fielddata
                     print(heading.split(" ")[-1].strip())
                     if counter==2:
                         counter=3
                         continue
-                    if datas!='' or True: 
+                    if data[datas]!='' or True: 
                         if fielddata < 43:
                             if fieldIndex >= len(fieldsdata):
                                 #fields = ET.SubElement(product, "field_"+str(fielddata))
@@ -200,14 +201,13 @@ with open("download1.csv") as f:                 #  offline
                                     fields = ET.SubElement(product, "description")
                                     descriptionField[heading.split(" ")[-1].strip()]=fields
                                 diss =True
-                            else : 
-                                if fieldsdata[fieldIndex]=='sku':
-                                    fieldIndex+=1
-                                    continue
-                                else:
-                                    fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
+                            else :
+                                if(fieldsdata[fieldIndex]=='price_2'):
+                                    datas=datas+1   
+                                fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
                                 diss=False
                             fieldIndex+=1
+                            
                         else:
                             if not descriptionField.get(heading.split(" ")[-1].strip()) == None:
                                 fields= descriptionField.get(heading.split(" ")[-1].strip())
@@ -221,10 +221,10 @@ with open("download1.csv") as f:                 #  offline
                             diss =True
                         tempF=fields
                         fielddata+=1
-                        if(dictionary.item().get(datas.lower().strip())==None):
-                            if(len(datas.strip().split(' '))>1 ):
-                                K=datas.strip().split(" ")
-                                datas=datas.strip()
+                        if(dictionary.item().get(data[datas].lower().strip())==None):
+                            if(len(data[datas].strip().split(' '))>1 ):
+                                K=data[datas].strip().split(" ")
+                                data[datas]=data[datas].strip()
                                 for l in range(len(K)):
                                     if(dictionary.item().get(K[l].lower().strip())==None):
                                         pass
@@ -232,9 +232,9 @@ with open("download1.csv") as f:                 #  offline
                                         K[l]=dictionary.item().get(K[l].lower().strip())[0]
                                 tempss= str(" ".join(K)).strip()
                             else :
-                                tempss =  datas;
+                                tempss =  data[datas];
                         else :
-                            tempss =dictionary.item().get(datas.lower().strip())[0]
+                            tempss =dictionary.item().get(data[datas].lower().strip())[0]
                         if not diss :
                             fields.text = tempss
                         else :
@@ -243,6 +243,7 @@ with open("download1.csv") as f:                 #  offline
                             #print("ERROR  " +A)
                             fields.text=A
                             descriptionMapper[heading.split(" ")[-1].strip()]=A
+                    
 
         
 
@@ -250,9 +251,32 @@ with open("download1.csv") as f:                 #  offline
 
 
 
-print(descriptionMapper)
+#print(descriptionMapper)
 
 mydata = ET.tostring(products)
 myfile = open("../Output/xmlDataAll.xml", "w")
 myfile.write(mydata.decode('windows-1250'))
 myfile.close()
+#sanitize
+
+
+path = '../Output/xmlDataAll.xml'
+
+tree = ET.parse(path)
+root = tree.getroot()
+prev = None
+skufound=False
+for page in root:                     # iterate over pages
+    elems_to_remove = []
+    for elem in page:
+        skufound = False
+        if(elem.tag=='sku' and skufound):
+            elems_to_remove.append(elem);
+        if(elem.tag=='sku'):
+            print("HRERE IT IS")
+            skufound=True;
+    print(elems_to_remove)
+    for elem_to_remove in elems_to_remove:
+        page.remove(elem_to_remove)
+# [...]
+tree.write("../Output/xmlDataSanitized.xml")
