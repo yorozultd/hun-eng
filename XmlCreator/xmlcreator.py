@@ -155,15 +155,29 @@ with open("download1.csv") as f:                 #  offline
                         break
                     else :
                         heading = i[1].split("|")[0]
+                        try: 
+                            heading2= i[1].split("|")[7].strip()
+                        except: 
+                            heading2=None
                     if(xmlDictionary.get(heading.split(" ")[-1].strip())==None):
-                        product = ET.SubElement(products, 'product')
-                        xmlDictionary[heading.strip()]=product
-                        sku=True
-                        new=True
-                        fields.text= heading.strip()
-                        fielddata=0
-                        fieldIndex=0
-                        fields = ET.SubElement(product, 'sku')
+                        if(xmlDictionary.get(heading2)==None):
+                            product = ET.SubElement(products, 'product')
+                            xmlDictionary[heading.strip()]=product
+                            sku=True
+                            new=True
+                            fields.text= heading.strip()
+                            fielddata=0
+                            fieldIndex=0
+                            fields = ET.SubElement(product, 'sku')
+                        else :
+                            product=xmlDictionary.get(heading2)
+                            sku=False
+                            new=False
+                            fields = ET.SubElement(product, 'title')
+                            fields.text= heading.strip()
+                            fieldIndex=0
+                            #fielddata=pager[heading.split(" ")[-1].strip()]
+                            fielddata=0
 
                     else :
                         product=xmlDictionary.get(heading.split(" ")[-1].strip())
@@ -183,7 +197,6 @@ with open("download1.csv") as f:                 #  offline
                 while datas < len(data)-1:
                     datas+=1
                     pager[heading.split(" ")[-1].strip()]=fielddata
-                    print(heading.split(" ")[-1].strip())
                     if counter==2:
                         counter=3
                         continue
