@@ -1,7 +1,7 @@
 import csv 
 import xml.etree.ElementTree as ET
 
-tree=ET.parse("../Output/xmlDataAll.xml")
+tree=ET.parse("../Output/xmlDataSanitized.xml")
 root = tree.getroot()
 with open('../Output/csvDataAll.csv', 'w') as writeFile:
     writer= csv.writer(writeFile)
@@ -9,11 +9,10 @@ with open('../Output/csvDataAll.csv', 'w') as writeFile:
     for page in root : 
         i+=1
         try:
-            sku= page.findall("sku")[0].text
-            print(sku)
-            brand= page.findall("brand")[0].text
-            price = page.findall("price")[0].text
-            category= page.findall("category")[0].text
+            sku= page.find("sku").text
+            brand= page.find("brand").text
+            price = page.find("price").text
+            category= page.find("category").text
             writer.writerows([[sku,brand,price,category]])
         except :
             print(page.find("sku").text)

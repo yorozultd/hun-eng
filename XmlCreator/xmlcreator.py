@@ -281,13 +281,17 @@ prev = None
 skufound=False
 for page in root:                     # iterate over pages
     elems_to_remove = []
+    skufound = False
     for elem in page:
-        skufound = False
+    
         if(elem.tag=='sku' and skufound):
             elems_to_remove.append(elem);
         if(elem.tag=='sku'):
             print("HRERE IT IS")
             skufound=True;
+        if not elem.text:
+            skufound=False
+            elems_to_remove.append(elem)
     print(elems_to_remove)
     for elem_to_remove in elems_to_remove:
         page.remove(elem_to_remove)
