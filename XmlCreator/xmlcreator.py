@@ -191,6 +191,9 @@ with open("download1.csv") as f:                 #  offline
                     debug+=1
                 
                 data= j.split("|")
+                #data = [x for x in data if x != '']
+                print(data)
+
 
                 diss =False
                 datas=-1
@@ -216,6 +219,10 @@ with open("download1.csv") as f:                 #  offline
                                 diss =True
                             else :
                                 if(fieldsdata[fieldIndex]=='price_2'):
+                                    datas=datas+1   
+                                fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
+                                diss=False
+                                if(fieldsdata[fieldIndex]=='size_1'):
                                     datas=datas+1   
                                 fields = ET.SubElement(product,fieldsdata[fieldIndex] )#converter[fielddata])
                                 diss=False
