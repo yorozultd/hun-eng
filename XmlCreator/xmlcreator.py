@@ -251,11 +251,17 @@ class SwisstimeXML:
                                                 pass
                                             else: 
                                                 K[l]=dictionary.item().get(K[l].lower().strip())[0]
-                                        tempss= str(" ".join(K)).strip()
+                                        if fieldIndex!=1:
+                                            tempss= str(" ".join(K)).strip()
+                                        else :
+                                            tempss =  data[datas];
                                     else :
                                         tempss =  data[datas];
                                 else :
-                                    tempss =dictionary.item().get(data[datas].lower().strip())[0]
+                                    if fieldIndex !=1:
+                                        tempss =dictionary.item().get(data[datas].lower().strip())[0]
+                                    else :
+                                        tempss =  data[datas];
                                 if not diss :
                                     fields.text = tempss
                                 else :
