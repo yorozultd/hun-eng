@@ -18,5 +18,7 @@ for product in products:
             stat[product.find('category').text.split('-')[0].strip()]=stat[product.find('category').text.split('-')[0].strip()]+1
 
 print("Total Number of Categories : "+ str(categories))
+
+stat= sorted(stat.items(), key =  lambda kv:(kv[1], kv[0]),reverse=True)
 with open('result.json', 'w') as fp:
     json.dump(stat, fp)
