@@ -11,11 +11,11 @@ stat={}
 categories=0
 for product in products: 
     if product.find('category') != None :
-        if stat.get(product.find('category').text.strip()) == None :
-            stat[product.find('category').text.strip()]=1   ;
+        if stat.get(product.find('category').text.split('-')[0].strip()) == None :
+            stat[product.find('category').text.split('-')[0].strip()]=1   ;
             categories+=1;
         else :
-            stat[product.find('category').text.strip()]=stat[product.find('category').text.strip()]+1
+            stat[product.find('category').text.split('-')[0].strip()]=stat[product.find('category').text.split('-')[0].strip()]+1
 
 print("Total Number of Categories : "+ str(categories))
 with open('result.json', 'w') as fp:
